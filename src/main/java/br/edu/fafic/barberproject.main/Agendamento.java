@@ -7,21 +7,23 @@ import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 public class Agendamento {
 
-    private final int id;
+    private final String id;
     private String nameClient;
     private String dateScheduling;
 
     public Agendamento(String nameCliente, String dateScheduling) {
         this.nameClient = nameCliente;
         this.dateScheduling = dateScheduling;
-        this.id = ++Constants.ID;
+        //this.id = ++Constants.ID;
+        this.id = UUID.randomUUID().toString();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
