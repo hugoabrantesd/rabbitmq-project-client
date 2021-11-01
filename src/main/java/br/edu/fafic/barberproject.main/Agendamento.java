@@ -15,7 +15,6 @@ public class Agendamento {
     private String nameClient;
     private String dateScheduling;
 
-
     public Agendamento(String nameCliente, String dateScheduling) {
         this.nameClient = nameCliente;
         this.dateScheduling = dateScheduling;
@@ -45,9 +44,9 @@ public class Agendamento {
     public void excute(Agendamento ag) throws IOException, TimeoutException {
         final Scanner scanner = new Scanner(System.in);
 
-        int op = -1;
+        int op;
         while (true) {
-            System.out.print("\n" +
+            System.out.print("\n======== APP BARBEARIA --> CLIENTES ========\n" +
                     "1- Enviar solicitação de agendamento\n" +
                     "0- Sair" +
                     "\n==>> "
@@ -55,8 +54,9 @@ public class Agendamento {
             op = scanner.nextInt();
             if (op == 1) {
                 enviarSolicitacao(ag);
-                receberResposta();
+                //receberResposta();
             } else {
+                System.exit(0);
                 break;
             }
         }
@@ -81,6 +81,8 @@ public class Agendamento {
                     null, message.getBytes());
 
             System.out.println("Mensagem enviada!!!");
+            System.out.println("--> Aguardando resposta".toUpperCase());
+            receberResposta();
 
         }
     }
@@ -96,8 +98,13 @@ public class Agendamento {
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String str = new String(delivery.getBody());
-            System.out.println("\n" + "Você tem uma mensagem -> " +
-                    str + "\n=======================================================================================");
+            System.out.println("\n" + "*** Você tem uma mensagem -> " +
+                    str + "\n======================================================================================");
+            System.out.print("\n======== APP BARBEARIA ========\n" +
+                    "1- Enviar solicitação de agendamento\n" +
+                    "0- Sair" +
+                    "\n==>> "
+            );
         };
 
         channel.basicConsume(this.getNameClient(), true, deliverCallback, consumerTag -> {
@@ -112,7 +119,7 @@ public class Agendamento {
 //        System.out.println(this.getNameClient().toUpperCase() + " aguardando resposta...");
 //
 //        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-//            String str = new String(delivery.getBody());
+//            String str = new String(delivery.getBody());111
 //            System.out.println("\n" + this.getNameClient() + " recebeu uma mensagem: " +
 //                    str + "\n==============================");
 //            //System.out.println(str);

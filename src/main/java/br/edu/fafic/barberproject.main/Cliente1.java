@@ -6,7 +6,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Hello world!
  */
-public class Connection1 {
+public class Cliente1 {
 
 
     public static void main(String[] args) throws IOException, TimeoutException {
