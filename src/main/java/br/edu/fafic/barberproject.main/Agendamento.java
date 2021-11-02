@@ -6,6 +6,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
@@ -16,9 +18,12 @@ public class Agendamento {
     private String nameClient;
     private String dateScheduling;
 
-    public Agendamento(String nameCliente, String dateScheduling) {
-        this.nameClient = nameCliente;
-        this.dateScheduling = dateScheduling;
+    public Agendamento(String nome) {
+        this.nameClient = nome;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        this.dateScheduling = localDateTime.format(formatter);
+//        this.dateScheduling = dateScheduling;
         //this.id = ++Constants.ID;
         this.id = UUID.randomUUID().toString();
     }
@@ -56,15 +61,12 @@ public class Agendamento {
             op = scanner.nextInt();
             if (op == 1) {
                 enviarSolicitacao(ag);
-                //receberResposta();
             } else {
                 System.exit(0);
                 break;
             }
         }
-
     }
-
 
     public void enviarSolicitacao(Agendamento agendamento) throws IOException, TimeoutException {
         final ConnectionFactory factory = new ConnectionFactory();
@@ -111,23 +113,5 @@ public class Agendamento {
 
         channel.basicConsume(this.getNameClient(), true, deliverCallback, consumerTag -> {
         });
-
-
-//        ConnectionFactory factory = new ConnectionFactory();
-//        factory.setHost("localhost");
-//        Connection2 connection = factory.newConnection();
-//        Channel channel = connection.createChannel();
-//
-//        System.out.println(this.getNameClient().toUpperCase() + " aguardando resposta...");
-//
-//        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-//            String str = new String(delivery.getBody());111
-//            System.out.println("\n" + this.getNameClient() + " recebeu uma mensagem: " +
-//                    str + "\n==============================");
-//            //System.out.println(str);
-//        };
-//        channel.basicConsume(this.getNameClient(), true, deliverCallback, consumerTag -> {
-//
-//        });
     }
 }
