@@ -2,6 +2,7 @@ package br.edu.fafic.barberproject.main;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 
@@ -71,7 +72,7 @@ public class Agendamento {
     public void enviarSolicitacao(Agendamento agendamento) throws IOException, TimeoutException {
         final ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
-        try (com.rabbitmq.client.Connection connection = factory.newConnection()) {
+        try (Connection connection = factory.newConnection()) {
             Channel channel = connection.createChannel();
             //1º queue name
             channel.exchangeDeclare(Constants.EXCHANGE_NAME, "direct");
@@ -87,14 +88,12 @@ public class Agendamento {
             System.out.println("Mensagem enviada!!!");
             System.out.println("--> Aguardando resposta".toUpperCase());
             receberResposta();
-
         }
     }
 
     public void receberResposta() throws IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        com.rabbitmq.client.Connection connection = factory.newConnection();
+        final ConnectionFactory factory = new ConnectionFactory();
+        Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
         channel.exchangeDeclare(Constants.EXCHANGE_RESPONSE, "direct");
         channel.queueDeclare(this.getNameClient(), false, false, false, null);
@@ -104,7 +103,7 @@ public class Agendamento {
             String str = new String(delivery.getBody());
             System.out.println("\n" + "*** Você tem uma mensagem -> " +
                     str + "\n======================================================================================");
-            System.out.print("\n======== APP BARBEARIA ========\n" +
+            System.out.print("\n======== APP BARBEARIA --> CLIENTES ========\n" +
                     "1- Enviar solicitação de agendamento\n" +
                     "0- Sair" +
                     "\n==>> "
